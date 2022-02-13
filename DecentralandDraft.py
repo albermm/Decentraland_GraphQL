@@ -58,7 +58,7 @@ def area_avg_price_fun_eth(x_min, x_max, y_min, y_max):
 range_max_min = ['x_range_min','x_range_max','y_range_min','y_range_max']
 area_avg_price = map(area_avg_price_fun_eth,range_max_min)
 
-df['area_avg_price'] = df['current_rate_pricemana'] * 2.96
+df['area_avg_price'] = df['current_rate_pricemana']/ 2.96
 df = df.drop_duplicates()
 
 ##Dashboard formatting ##
@@ -99,4 +99,4 @@ c = alt.Chart(df).mark_circle().encode(
         
 st.altair_chart(c, use_container_width=True)
 
-
+#df.to_excel(r'C:\2021_NehalPersonal\Project\Decentraland_USDPrice.xlsx', sheet_name='Data', index = False)
