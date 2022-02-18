@@ -7,23 +7,30 @@ This is a temporary script file.
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 from datetime import datetime
-from statistics import mean
 import altair as alt
-import rpy2
-import rpy2.robjects as robjects
-import rpy2.robjects.packages as rpackages
-from rpy2.robjects.vectors import StrVector
 
-packageNames = ('ggplot2', 'tidyverse','rayshader','rgl','DiagrammeR')
-utils = rpackages.importr('utils')
-utils.chooseCRANmirror(ind=1)
 
-packnames_to_install = [a for a in packageNames if not rpackages.isinstalled(a)]
-
-if len(packnames_to_install) > 0:
-    utils.install_packages(StrVector(packnames_to_install))
+# =============================================================================
+# Trial -- Using Rpy2 
+# import plotly.express as px
+# from statistics import mean
+# 
+# import rpy2
+# import rpy2.robjects as robjects
+# import rpy2.robjects.packages as rpackages
+# from rpy2.robjects.vectors import StrVector
+# 
+# ##Packages to try Rpy2
+# packageNames = ('ggplot2', 'tidyverse','rayshader','rgl','DiagrammeR')
+# utils = rpackages.importr('utils')
+# utils.chooseCRANmirror(ind=1)
+# 
+# packnames_to_install = [a for a in packageNames if not rpackages.isinstalled(a)]
+# 
+# if len(packnames_to_install) > 0:
+#     utils.install_packages(StrVector(packnames_to_install))
+# =============================================================================
 
 # @cache
 @st.cache
@@ -58,7 +65,10 @@ def area_avg_price_fun_eth(x_min, x_max, y_min, y_max):
 range_max_min = ['x_range_min','x_range_max','y_range_min','y_range_max']
 area_avg_price = map(area_avg_price_fun_eth,range_max_min)
 
+#Temporary formula for USD Price
 df['area_avg_price'] = df['current_rate_pricemana']/ 2.96
+
+#Drop Duplicates
 df = df.drop_duplicates()
 
 ## Dashboard formatting in Streamlit ##
@@ -80,16 +90,16 @@ area = st.sidebar.slider('Size of area to calculate `area_avg_price` (shown on m
 mana_range = st.sidebar.slider('MANA price range:', value = [0,1000000],step = 10)
 usd_range = st.sidebar.slider('USD price range:', value = [0,1000000],step = 10)
 
-df = df.loc[(df['x'] >= x_range[0]) & (df['x'] <= x_range[1]) & 
+#Data filtering based on the input data and storing it into a different Dataframe
+df_dashboard = df.loc[(df['x'] >= x_range[0]) & (df['x'] <= x_range[1]) & 
             (df['y'] >= y_range[0]) & (df['y'] <= y_range[1]) & 
             (df['current_rate_pricemana'] >= mana_range[0]) &
             (df['current_rate_pricemana'] <= mana_range[1]) &
             (df['transaction_date'] <= date_transaction)]
 
 
-#Plot Data
-
-c = alt.Chart(df).mark_circle().encode(
+#Plot Data in a Heatmap for Area Average Price
+c = alt.Chart(df_dashboard).mark_circle().encode(
     x='x', 
     y='y', 
     #size= 'area_avg_price',
@@ -104,4 +114,5 @@ c = alt.Chart(df).mark_circle().encode(
         
 st.altair_chart(c, use_container_width=True)
 
+#Store final dataset into an excel
 #df.to_excel(r'C:\2021_NehalPersonal\Project\Decentraland_USDPrice.xlsx', sheet_name='Data', index = False)
