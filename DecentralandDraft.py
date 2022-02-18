@@ -28,8 +28,8 @@ if len(packnames_to_install) > 0:
 # @cache
 @st.cache
 def load_data():
-    data = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv")
-    df = pd.DataFrame(data)
+    datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv")
+    df = pd.DataFrame(datacsv)
     return df
 
 df = load_data()
@@ -61,25 +61,30 @@ area_avg_price = map(area_avg_price_fun_eth,range_max_min)
 df['area_avg_price'] = df['current_rate_pricemana']/ 2.96
 df = df.drop_duplicates()
 
-##Dashboard formatting ##
+## Dashboard formatting in Streamlit ##
 st.header("Map - Area Average Price")
 st.sidebar.header("Decentraland")
 
 
 #Side slider bar
-x_coordinate = st.sidebar.slider('X-Coordinate Range', -200, 200, 0)
-y_coordinate = st.sidebar.slider('Y-Coordinate Range', -200, 200, 0)
+x_range = st.sidebar.slider('X-Coordinate Range', value= [-200, 200])
+y_range = st.sidebar.slider('Y-Coordinate Range', value= [-200, 200])
 
 #Min and max values for Transaction Date Range
 oldest = df['transaction_date'].min() # Earliest date
 latest = df['transaction_date'].max() # Latest date
 
-
+## Input fields
 date_transaction = st.sidebar.date_input('Transaction Date Range',latest,oldest,latest)
 area = st.sidebar.slider('Size of area to calculate `area_avg_price` (shown on map)', 0, 150, 20)
-mana_range = st.sidebar.slider('MANA price range:', 0, 1000000, 500000,10)
-usd_range = st.sidebar.slider('USD price range:', 0, 1000000, 500000,10)
+mana_range = st.sidebar.slider('MANA price range:', value = [0,1000000],step = 10)
+usd_range = st.sidebar.slider('USD price range:', value = [0,1000000],step = 10)
 
+df = df.loc[(df['x'] >= x_range[0]) & (df['x'] <= x_range[1]) & 
+            (df['y'] >= y_range[0]) & (df['y'] <= y_range[1]) & 
+            (df['current_rate_pricemana'] >= mana_range[0]) &
+            (df['current_rate_pricemana'] <= mana_range[1]) &
+            (df['transaction_date'] <= date_transaction)]
 
 
 #Plot Data
