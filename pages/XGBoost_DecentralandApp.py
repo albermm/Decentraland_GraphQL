@@ -43,8 +43,8 @@ def app():
     # @cache
     @st.cache
     def load_data():
-        datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv") #To load it from local
-        #datacsv = pd.read_csv("decentraland.csv") #To load it from Github
+        #datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv") #To load it from local
+        datacsv = pd.read_csv("decentraland.csv") #To load it from Github
         df = pd.DataFrame(datacsv)
         return df
     
