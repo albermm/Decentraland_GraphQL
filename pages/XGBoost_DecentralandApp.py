@@ -43,8 +43,8 @@ def app():
     # @cache
     @st.cache
     def load_data():
-        #datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv") #To load it from local
-        datacsv = pd.read_csv("decentraland.csv") #To load it from Github
+        datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv") #To load it from local
+        #datacsv = pd.read_csv("decentraland.csv") #To load it from Github
         df = pd.DataFrame(datacsv)
         return df
     
@@ -143,8 +143,8 @@ def app():
     st.write(cv_results)
     
     
-    from xgboost import plot_importance
-    import matplotlib.pyplot as plt
+    #from xgboost import plot_importance
+    #import matplotlib.pyplot as plt
     
     #fig, ax = plt.subplots(figsize=(10,8))
     #plot_importance(xgb, ax=ax)
