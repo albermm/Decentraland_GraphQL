@@ -9,8 +9,8 @@ import streamlit as st
 
 #Custom Imports
 from multipage import MultiPage
-from pages import ShowDataApp, DecentralandDraftApp, Decentraland_ParcelSalePriceApp
-#from pages import DecentralandDraft, Decentraland_ParcelSalePrice,XGBoost_Decentraland,WebAppPage2
+from pages import ShowDataApp, DecentralandDraftApp, Decentraland_ParcelSalePriceApp,XGBoost_DecentralandApp
+#,XGBoost_PredictionApp
 
 # Create an instance of the app 
 app = MultiPage()
@@ -23,7 +23,9 @@ app = MultiPage()
 app.add_page("Map- Area Average Price", DecentralandDraftApp.app)
 app.add_page("Map- Parcel Sale Price", Decentraland_ParcelSalePriceApp.app)
 app.add_page("Show Data", ShowDataApp.app)
-#app.add_page("XG Boost", XGBoost_DecentralandApp.app)
+app.add_page("XG Boost Training Data", XGBoost_DecentralandApp.app)
+#app.add_page("XG Boost Prediction", XGBoost_PredictionApp.app)
+
 
 # The main app
 app.run()
