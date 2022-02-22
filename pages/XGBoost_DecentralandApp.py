@@ -144,10 +144,6 @@ def app():
     
     
     #from xgboost import plot_importance
-    #import matplotlib.pyplot as plt
-    
-    #fig, ax = plt.subplots(figsize=(10,8))
-    #plot_importance(xgb, ax=ax)
     
     
     #accuracy = accuracy_score(y_test, predictions)
