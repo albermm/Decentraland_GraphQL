@@ -4,5 +4,3 @@ plotly
 altair
 xgboost
 sklearn
-matplotlib
-
