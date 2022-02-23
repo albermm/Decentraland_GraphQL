@@ -4,3 +4,7 @@ plotly
 altair
 xgboost
 sklearn
+requests
+matplotlib
+json
+datetime
