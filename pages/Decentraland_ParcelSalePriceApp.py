@@ -40,20 +40,21 @@ def app():
     # @cache
     @st.cache
     def load_data():
-        #datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/decentraland.csv") #To load it from local
-        datacsv = pd.read_csv("decentraland.csv") #To load it from Github
+        #datacsv = pd.read_csv("C:/Users/Nehal/JupyterNotebooks/TheGraph_Decentraland.csv") #To load it from local
+        datacsv = pd.read_csv("TheGraph_Decentraland.csv") #To load it from Github
         df = pd.DataFrame(datacsv)
         return df
     
     df = load_data()
     
+    df = df.rename(columns={'price_MANA': 'current_rate_pricemana'})
+
     # only keep relevant columns
-    df = df [['x','y', 'last_sale_timestamp', 'current_rate_pricemana',
-                  'last_sale_transaction_timestamp', 'last_sale_transaction_created_timestamp']]
-    
+    df = df [['x','y', 'date', 'current_rate_pricemana','price_USD', 'createdAt']]
+
     # Create date field
-    df['transaction_date'] = pd.to_datetime(df['last_sale_transaction_timestamp']).dt.date
-    df['transaction_date_created'] = pd.to_datetime(df['last_sale_transaction_created_timestamp']).dt.date
+    df['transaction_date'] = pd.to_datetime(df['date']).dt.date
+    df['transaction_date_created'] = pd.to_datetime(df['createdAt']).dt.date
     
     #### Calculate average price for a given area #### 
     # first add columns for ranges for average
@@ -104,7 +105,9 @@ def app():
                 (df['y'] >= y_range[0]) & (df['y'] <= y_range[1]) & 
                 (df['current_rate_pricemana'] >= mana_range[0]) &
                 (df['current_rate_pricemana'] <= mana_range[1]) &
-                (df['transaction_date'] <= date_transaction)]
+                (df['transaction_date'] <= date_transaction)&
+                (df['price_USD'] >= usd_range[0])&
+                (df['price_USD'] <= usd_range[1])]
     
     
     #Plot Data in a Heatmap for Area Average Price
