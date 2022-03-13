@@ -9,31 +9,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import altair as alt
-#from pages import utils
-import collections
-
-
-# =============================================================================
-# Trial -- Using Rpy2 
-# import plotly.express as px
-# from statistics import mean
-# 
-# import rpy2
-# import rpy2.robjects as robjects
-# import rpy2.robjects.packages as rpackages
-# from rpy2.robjects.vectors import StrVector
-# 
-# ##Packages to try Rpy2
-# packageNames = ('ggplot2', 'tidyverse','rayshader','rgl','DiagrammeR')
-# utils = rpackages.importr('utils')
-# utils.chooseCRANmirror(ind=1)
-# 
-# packnames_to_install = [a for a in packageNames if not rpackages.isinstalled(a)]
-# 
-# if len(packnames_to_install) > 0:
-#     utils.install_packages(StrVector(packnames_to_install))
-# =============================================================================
-
 
 def app():
 
@@ -63,20 +38,17 @@ def app():
     df['y_range_min'] = df["y"] - 20 
     df['y_range_max'] = df["y"] + 20 
     
-    # Create function that calculates the average price
-    def area_avg_price_fun_eth(x_min, x_max, y_min, y_max):
-        area_avg_price = 'current_rate_pricemana'.mean([x_min,x_max,y_min,y_max])
-        return area_avg_price
-    
-    #df['area_avg_price'] = df.apply(lambda row : area_avg_price_fun_eth(row['x_range_min'],row['x_range_max'], row['y_range_min'],row['y_range_max']), axis=1)
-    range_max_min = ['x_range_min','x_range_max','y_range_min','y_range_max']
-    area_avg_price = map(area_avg_price_fun_eth,range_max_min)
-    
-    #Temporary formula for USD Price
-    df['area_avg_price'] = df['current_rate_pricemana']/ 2.96
-    
     #Drop Duplicates
     df = df.drop_duplicates()
+    
+    # Create function that calculates the average price
+    def area_avg_price_fun_eth(x_range_min, x_range_max, y_range_min, y_range_max):
+        df_temp = df.loc[(df['x'] >= x_range_min) & (df['x'] <= x_range_max) & (df['y'] >= y_range_min) & (df['y'] <= y_range_max)]
+        area_avg_price = df_temp['current_rate_pricemana'].mean()
+        return area_avg_price
+
+    df['area_avg_price'] = list(map(area_avg_price_fun_eth,df['x_range_min'],df['x_range_max'],df['y_range_min'],df['y_range_max']))
+
     
     ## Dashboard formatting in Streamlit ##
     
